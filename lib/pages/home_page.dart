@@ -1,3 +1,7 @@
+import 'package:get/get.dart';
+import 'package:payment_app/pages/payment_page.dart';
+import 'package:payment_app/widgets/buttons.dart';
+import 'package:payment_app/widgets/large_button.dart';
 import 'package:payment_app/widgets/text_size.dart';
 
 import '../component/colors.dart';
@@ -23,6 +27,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             _headSection(),
             _listBills(),
+            _payButton(),
           ],
         ),
       ),
@@ -37,6 +42,7 @@ class _HomePageState extends State<HomePage> {
           _mainBackground(),
           _curveImageContainer(),
           _buttonContainer(),
+          _textContainer(),
         ],
       ),
     );
@@ -80,19 +86,88 @@ class _HomePageState extends State<HomePage> {
     return Positioned(
       right: 58,
       bottom: 15,
-      child: Container(
-        height: 60,
-        width: 60,
-        decoration: BoxDecoration(
-          image: const DecorationImage(
-              image: AssetImage("assets/images/lines.png")),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 15,
-              offset: const Offset(0, 1),
-              color: const Color(0xFF11324d).withOpacity(0.2),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: () {
+          showModalBottomSheet<dynamic>(
+            isScrollControlled: true,
+            barrierColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext bc) {
+              return Container(
+                height: MediaQuery.of(context).size.height - 240,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        bottom: 0,
+                        child: Container(
+                          color: const Color(0xFFeef1f4).withOpacity(0.7),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height - 300,
+                        )),
+                    Positioned(
+                      top: 0,
+                      right: 58,
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 5, bottom: 25),
+                        width: 60,
+                        height: 250,
+                        decoration: BoxDecoration(
+                          color: AppColor.mainColor,
+                          borderRadius: BorderRadius.circular(29),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppButtons(
+                              icon: Icons.cancel,
+                              iconColor: AppColor.mainColor,
+                              textColor: Colors.white,
+                              backgroundColor: Colors.white,
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            AppButtons(
+                              icon: Icons.add,
+                              iconColor: AppColor.mainColor,
+                              textColor: Colors.white,
+                              backgroundColor: Colors.white,
+                              onTap: () {},
+                              text: "Add Bill",
+                            ),
+                            AppButtons(
+                              icon: Icons.history,
+                              iconColor: AppColor.mainColor,
+                              textColor: Colors.white,
+                              backgroundColor: Colors.white,
+                              onTap: () {},
+                              text: "History",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        child: Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            image: const DecorationImage(
+                image: AssetImage("assets/images/lines.png")),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 15,
+                offset: const Offset(0, 1),
+                color: const Color(0xFF11324d).withOpacity(0.2),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,12 +180,12 @@ class _HomePageState extends State<HomePage> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: ListView.separated(
-          itemCount: 4,
+          itemCount: 3,
           shrinkWrap: true,
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: 15,
           ),
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return Container(
               height: 130,
@@ -231,9 +306,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           width: 5,
                           height: 40,
-                          margin: EdgeInsets.only(
-                            bottom: 8.0,
-                          ),
+                          margin: const EdgeInsets.only(bottom: 8.0),
                           decoration: BoxDecoration(
                             color: AppColor.halfOval,
                             borderRadius: const BorderRadius.only(
@@ -256,6 +329,45 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
+    );
+  }
+
+  _payButton() {
+    return Positioned(
+        bottom: 20,
+        child: AppLargeButton(
+          text: "Pay all bills",
+          textColor: Colors.white,
+          onTap: () {
+            Get.to(() => const PaymentPage());
+          },
+        ));
+  }
+
+  _textContainer() {
+    return Stack(
+      children: const [
+        Positioned(
+          left: 0,
+          top: 100,
+          child: Text(
+            "My Bills",
+            style: TextStyle(
+                fontSize: 70,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF293952)),
+          ),
+        ),
+        Positioned(
+          left: 40,
+          top: 80,
+          child: Text(
+            "My Bills",
+            style: TextStyle(
+                fontSize: 50, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }
